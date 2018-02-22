@@ -3,7 +3,7 @@ library(readr)
 library(magrittr)
 library(dplyr)
 library(ggplot2)
-library(TTR)
+#library(TTR)
 sunspot <- read_csv("sunspot.csv")
 #adjust zero value
 
@@ -18,17 +18,15 @@ summary(sunspot$`Yearly Sunspot Number`)
 sd(sunspot$`Yearly Sunspot Number`)
 print('Transformed data')
 summary(sunspot$ln)
-sd(sunspot$ln[is.finite(sunspot$ln)])
-#SMA to source
-sunspot$SMAsource <- SMA(sunspot$`Yearly Sunspot Number`,5) #TTR lib
-ggplot(sunspot,aes(Year))+geom_point(aes(y=sunspot$`Yearly Sunspot Number`- sunspot$SMAsource))
-#SMA to transformed
-sunspot$SMAtrans <- SMA(sunspot$ln,5)
-ggplot(sunspot,aes(Year))+geom_point(aes(y=sunspot$ln - sunspot$SMAtrans))
-#SMA transformed to source format
-sunspot$trans <- (exp(sunspot$SMAtrans)*(0.5*geomean^(0.5-1))+1)^(1/0.5)
-#prove
-ggplot(sunspot,aes(Year))+geom_line(aes(y=sunspot$`Yearly Sunspot Number`),color="black")+geom_line(aes(y=sunspot$SMAsource),color="blue")+geom_line(aes(y=sunspot$trans),color="red")
-print (mean((sunspot$`Yearly Sunspot Number`-sunspot$SMAsource)[is.finite((sunspot$`Yearly Sunspot Number`-sunspot$SMAsource))]))
-print (mean((sunspot$`Yearly Sunspot Number`-sunspot$trans)[is.finite((sunspot$`Yearly Sunspot Number`-sunspot$trans))]))
+sd(sunspot$ln)
 
+#Transformed to source format
+#sunspot$trans <- (exp(sunspot$SMAtrans)*(0.5*geomean^(0.5-1))+1)^(1/0.5)
+#prove
+fit = lm(sunspot$`Yearly Sunspot Number` ~sunspot$Year)
+fit1 = lm(sunspot$ln ~sunspot$Year)
+plot(fit)
+plot(fit1)
+
+anova(fit) #Test significant
+anova(fit1)
