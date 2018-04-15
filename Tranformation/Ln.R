@@ -30,3 +30,9 @@ plot(fit1)
 
 anova(fit) #Test significant
 anova(fit1)
+
+acf(sunspot$`Yearly Sunspot Number`,NULL,plot=TRUE,main="Yearly Sunspot Number")  #acf
+acf(sunspot$ln,plot=TRUE)  #acf
+
+lag.plot(sunspot$`Yearly Sunspot Number`,1)
+lag.plot(sunspot$ln,1)
